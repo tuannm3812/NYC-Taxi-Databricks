@@ -13,11 +13,15 @@
   <img src="https://capsule-render.vercel.app/api?type=waving&height=180&text=NYC%20Taxi%20Lakehouse%20Analytics&fontAlign=50&fontAlignY=35&color=0:111827,45:0F766E,100:F59E0B&fontColor=ffffff" alt="NYC Taxi Lakehouse Analytics banner">
 </p>
 
+<p align="center">
+  <img src="https://s.abcnews.com/images/Business/nyc-taxis-gty-rc-200220_hpMain.jpg" alt="New York City yellow taxis" width="860">
+</p>
+
 ## Overview
 
-NYC Taxi Databricks Analytics is a lakehouse analytics project built with Databricks, PySpark, and Delta Lake. It processes green and yellow taxi trip records, enriches trips with zone and borough attributes, produces operational and revenue insights, and trains machine learning models from engineered trip features.
+NYC Taxi Databricks Analytics is a lakehouse analytics project built with Databricks, PySpark, and Delta Lake. It processes green and yellow taxi trip records, enriches trips with zone and borough attributes, produces operational and revenue insights, and trains predictive models from engineered trip features.
 
-The repository is structured as a professional handover-ready project: source notebook, exported analysis report, implementation notes, and modular folders for future productionization.
+The repository is structured as a professional handover-ready project with a curated notebook, exported analysis report, implementation notes, and modular folders for future productionization.
 
 ## Key Capabilities
 
@@ -28,6 +32,15 @@ The repository is structured as a professional handover-ready project: source no
 - Apply documented data quality rules with capped row removal.
 - Analyze demand, revenue, tips, speed, and route patterns across month, weekday, hour, color, and borough pair.
 - Train and evaluate machine learning models using scalable Spark ML workflows.
+
+## Workflow Highlights
+
+1. Configure Databricks catalog, schema, volume, and reusable table names.
+2. Ingest raw taxi files and taxi zone reference data into managed lakehouse storage.
+3. Standardize green and yellow taxi schemas into a shared trip model.
+4. Apply quality filters and persist a borough-enriched Delta table.
+5. Produce business-facing SQL analytics across demand, revenue, tips, and route behavior.
+6. Train and compare baseline, ridge, Huber, and fallback tree-style models.
 
 ## Repository Structure
 
