@@ -10,10 +10,6 @@
 </p>
 
 <p align="center">
-  <img src="https://capsule-render.vercel.app/api?type=waving&height=180&text=NYC%20Taxi%20Lakehouse%20Analytics&fontAlign=50&fontAlignY=35&color=0:111827,45:0F766E,100:F59E0B&fontColor=ffffff" alt="NYC Taxi Lakehouse Analytics banner">
-</p>
-
-<p align="center">
   <img src="https://s.abcnews.com/images/Business/nyc-taxis-gty-rc-200220_hpMain.jpg" alt="New York City yellow taxis" width="860">
 </p>
 
