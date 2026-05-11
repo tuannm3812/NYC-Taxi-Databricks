@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Databricks
+.databricks/
+
+# OS
+.DS_Store
+Thumbs.db
