@@ -15,9 +15,9 @@
 
 ## Overview
 
-NYC Taxi Databricks Analytics is a lakehouse analytics project built with Databricks, PySpark, and Delta Lake. It processes green and yellow taxi trip records, enriches trips with zone and borough attributes, produces operational and revenue insights, and trains predictive models from engineered trip features.
+NYC Taxi Databricks Analytics is a Databricks and PySpark lakehouse project for NYC green and yellow taxi trip data. It uses Delta Lake processing to prepare borough-level analytical tables, generate business insights, and train predictive models from engineered trip features.
 
-The repository is structured as a professional handover-ready project with a curated notebook, exported analysis report, implementation notes, and modular folders for future productionization.
+The repository includes the executable Databricks notebook, exported analysis report, setup notes, handover documentation, and modular folders for future productionization.
 
 ## Key Capabilities
 
@@ -76,10 +76,6 @@ The repository is structured as a professional handover-ready project with a cur
 3. Confirm the Unity Catalog objects and volume paths in the notebook setup section.
 4. Run [notebooks/nyc_taxi_databricks_analytics.ipynb](notebooks/nyc_taxi_databricks_analytics.ipynb) from top to bottom.
 5. Regenerate the HTML report after changing notebook logic or outputs.
-
-## Suggested Repository Description
-
-Databricks and PySpark lakehouse analytics project for NYC green and yellow taxi trip data, including Delta Lake processing, borough-level business insights, machine learning, and professional handover artifacts.
 
 ## Future Improvements
 
