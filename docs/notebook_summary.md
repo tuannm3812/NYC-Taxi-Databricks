@@ -1,41 +1,45 @@
 # Notebook Summary
 
-Source notebook: `Assignment_2_ManhTuan_Nguyen.ipynb`
+Notebook: `notebooks/nyc_taxi_databricks_analytics.ipynb`
 
-## Confirmed Topic
+## Purpose
 
-The notebook is about **NYC taxi trip analytics**, not weather forecasting. It works with green and yellow taxi datasets, taxi zones, Delta tables, feature engineering, business analytics, and machine learning.
+The notebook implements an end-to-end NYC taxi analytics workflow in Databricks. It converts raw green and yellow taxi trip files into a curated analytical dataset, answers route and revenue questions, and trains predictive models from engineered trip features.
 
-## Main Sections
+## Workflow
 
-1. **Data Ingestion & Cleaning**
-   - Environment and Databricks storage setup.
-   - Green and yellow taxi Parquet ingestion.
-   - Taxi zone lookup loading into Delta.
-   - Schema harmonisation across taxi colors.
-   - Derived trip features such as duration, distance, speed, and revenue efficiency.
-   - Cleaning with a documented removal cap.
-   - Borough enrichment and final table persistence.
+1. **Lakehouse Setup and Ingestion**
+   - Configure Spark timezone for NYC-local temporal features.
+   - Define Unity Catalog and volume paths.
+   - Download green and yellow taxi Parquet files into Databricks storage.
+   - Register taxi zone lookup data as Delta.
 
-2. **Business Questions**
-   - Year-month trip summary.
-   - Descriptive statistics by taxi color.
-   - Pickup-to-dropoff borough grids by month, day of week, and hour.
-   - Top pickup-to-dropoff revenue share for 2024.
-   - Tip percentage analysis.
-   - Duration bin analysis for average speed and kilometers per dollar.
+2. **Data Preparation**
+   - Harmonize green and yellow taxi schemas.
+   - Union trips into a consistent dataset.
+   - Derive duration, distance, speed, temporal, and fare-efficiency features.
+   - Apply data quality filters while retaining visibility into row removal.
+   - Enrich pickup and drop-off locations with borough metadata.
 
-3. **Machine Learning**
-   - Dataset splitting.
-   - Baseline model.
-   - Target encoding.
-   - Feature standardization.
-   - Feature assembly.
-   - Model training and conclusion.
+3. **Business Analytics**
+   - Summarize monthly taxi activity.
+   - Compare descriptive statistics by taxi color.
+   - Analyze pickup-to-dropoff borough flows by month, day, and hour.
+   - Identify high-revenue borough-pair routes.
+   - Evaluate tip percentages and fare efficiency.
+   - Compare travel speed and distance economics across duration bands.
 
-## Professional Handover Notes
+4. **Machine Learning**
+   - Split datasets for training, validation, and testing.
+   - Build a route-time baseline model.
+   - Apply target encoding without validation or test leakage.
+   - Standardize numeric features.
+   - Assemble feature vectors and train Spark ML models.
+   - Summarize model performance and project conclusions.
 
-- The notebook should remain the executable source of truth.
-- The HTML report should be regenerated whenever notebook logic or outputs change.
-- The PDF handover report should summarize assumptions, business findings, model performance, and limitations.
-- Reusable code can be progressively moved from notebook cells into the `src/` modules when the project evolves beyond assignment submission.
+## Handover Notes
+
+- The notebook is the executable source of truth.
+- The HTML report is the review artifact for stakeholders who do not need to run Databricks.
+- The PDF report is retained as a formal handover document.
+- The `src/` folders provide a migration path from exploratory notebook workflow to reusable production modules.
