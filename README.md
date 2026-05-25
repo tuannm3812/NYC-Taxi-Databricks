@@ -6,44 +6,54 @@
   <img src="https://img.shields.io/badge/Language-Python-3776AB?logo=python&logoColor=white" alt="Python">
   <img src="https://img.shields.io/badge/Lakehouse-Delta%20Lake-00A1E0" alt="Delta Lake">
   <img src="https://img.shields.io/badge/Data-NYC%20Taxi-0F766E" alt="NYC Taxi">
-  <img src="https://img.shields.io/badge/Status-Portfolio%20Ready-16A34A" alt="Portfolio Ready">
 </p>
 
-<p align="center">
-  <img src="https://s.abcnews.com/images/Business/nyc-taxis-gty-rc-200220_hpMain.jpg" alt="New York City yellow taxis" width="860">
-</p>
+Databricks lakehouse project for NYC green and yellow taxi trip data. The
+notebook ingests raw Parquet files, builds curated Delta tables, produces
+borough-level analytics, and trains Spark-based fare prediction models from
+engineered trip features.
 
-## Overview
+This repository is designed as a viewer-facing portfolio project: the notebook
+is the executable source, while the exported reports and documentation explain
+the analytical decisions and handover path.
 
-NYC Taxi Databricks Analytics is a Databricks and PySpark lakehouse project for NYC green and yellow taxi trip data. It uses Delta Lake processing to prepare borough-level analytical tables, generate business insights, and train predictive models from engineered trip features.
+## 1. Project Highlights
 
-The repository includes the executable Databricks notebook, exported analysis report, setup notes, handover documentation, and modular folders for future productionization.
+- Processes nearly 1 billion raw taxi trips in Databricks using PySpark and
+  Delta Lake.
+- Standardizes green and yellow taxi schemas into a shared analytical model.
+- Applies explicit data quality rules and retains 974.7M clean trips from the
+  latest exported run, removing 1.69% of raw rows.
+- Enriches trips with NYC taxi zone and borough metadata from 265 locations.
+- Analyzes demand, revenue, tips, speed, duration, distance efficiency, and
+  borough-to-borough route behavior.
+- Builds a modeling workflow with time-based splits, hierarchical baselines,
+  target encoding, z-score standardization, ridge regression, Huber regression,
+  and fallback tree-style scoring.
 
-## Key Capabilities
+## 2. Technical Skills
 
-- Ingest green and yellow NYC taxi trip Parquet files into Databricks-managed storage.
-- Load taxi zone lookup data and persist curated tables with Delta Lake.
-- Harmonize schemas across taxi services and build a unified trip-level dataset.
-- Engineer features for duration, distance, speed, time of travel, fare efficiency, and borough routes.
-- Apply documented data quality rules with capped row removal.
-- Analyze demand, revenue, tips, speed, and route patterns across month, weekday, hour, color, and borough pair.
-- Train and evaluate machine learning models using scalable Spark ML workflows.
+- **Cloud analytics:** Databricks Workspace, Unity Catalog, Volumes, managed
+  Delta tables.
+- **Distributed data engineering:** PySpark DataFrames, Spark SQL, schema
+  harmonization, large-scale joins, aggregation, and persistence.
+- **Lakehouse design:** raw volume paths, curated tables, reusable artifact
+  paths, and governed table naming.
+- **Data quality:** timestamp bounds, distance/duration/fare filters, row
+  retention measurement, and borough enrichment checks.
+- **Analytics engineering:** route-level SQL metrics, monthly summaries,
+  revenue share analysis, tip behavior, and operational speed/distance KPIs.
+- **Machine learning:** train/validation/test splitting, target encoding,
+  feature standardization, baseline modeling, closed-form ridge regression,
+  gradient descent, Huber loss, and model artifact persistence.
+- **Project communication:** exported HTML report, handover PDF, setup notes,
+  and notebook summary documentation.
 
-## Workflow Highlights
-
-1. Configure Databricks catalog, schema, volume, and reusable table names.
-2. Ingest raw taxi files and taxi zone reference data into managed lakehouse storage.
-3. Standardize green and yellow taxi schemas into a shared trip model.
-4. Apply quality filters and persist a borough-enriched Delta table.
-5. Produce business-facing SQL analytics across demand, revenue, tips, and route behavior.
-6. Train and compare baseline, ridge, Huber, and fallback tree-style models.
-
-## Repository Structure
+## 3. Repository Structure
 
 ```text
 .
 |-- README.md
-|-- .gitignore
 |-- docs/
 |   |-- databricks_setup.md
 |   |-- notebook_summary.md
@@ -54,37 +64,104 @@ The repository includes the executable Databricks notebook, exported analysis re
 |   |-- nyc_taxi_databricks_analytics.html
 |   `-- nyc_taxi_databricks_handover_report.pdf
 `-- src/
-    |-- ingestion/
-    |-- transformation/
     |-- feature_engineering/
-    `-- modeling/
+    |-- ingestion/
+    |-- modeling/
+    `-- transformation/
 ```
 
-## Primary Artifacts
+The project is intentionally notebook-first. The `src/` folders are lightweight
+placeholders for future productionization and should stay small until reusable
+job modules are introduced.
 
-- [notebooks/nyc_taxi_databricks_analytics.ipynb](notebooks/nyc_taxi_databricks_analytics.ipynb): Main Databricks notebook for ingestion, cleaning, enrichment, analytics, and machine learning.
-- [reports/nyc_taxi_databricks_analytics.html](reports/nyc_taxi_databricks_analytics.html): Browser-friendly exported analysis report.
-- [reports/nyc_taxi_databricks_handover_report.pdf](reports/nyc_taxi_databricks_handover_report.pdf): Project handover report.
-- [docs/databricks_setup.md](docs/databricks_setup.md): Runtime, storage, and execution guidance.
-- [docs/notebook_summary.md](docs/notebook_summary.md): Technical summary of the notebook workflow.
-- [docs/project_handover.md](docs/project_handover.md): Editable source for the professional handover report.
+## 4. Key Artifacts
 
-## Databricks Execution
+- [notebooks/nyc_taxi_databricks_analytics.ipynb](notebooks/nyc_taxi_databricks_analytics.ipynb) -
+  executable Databricks notebook.
+- [reports/nyc_taxi_databricks_analytics.html](reports/nyc_taxi_databricks_analytics.html) -
+  exported analysis report for reviewers.
+- [reports/nyc_taxi_databricks_handover_report.pdf](reports/nyc_taxi_databricks_handover_report.pdf) -
+  formal handover report.
+- [docs/databricks_setup.md](docs/databricks_setup.md) - Databricks runtime,
+  storage, and execution guidance.
+- [docs/notebook_summary.md](docs/notebook_summary.md) - technical workflow
+  summary.
+- [docs/project_handover.md](docs/project_handover.md) - editable handover
+  report source.
 
-1. Clone this repository into a Databricks workspace using Repos.
-2. Attach a cluster with Spark, Delta Lake, and Python support.
-3. Confirm the Unity Catalog objects and volume paths in the notebook setup section.
-4. Run [notebooks/nyc_taxi_databricks_analytics.ipynb](notebooks/nyc_taxi_databricks_analytics.ipynb) from top to bottom.
-5. Regenerate the HTML report after changing notebook logic or outputs.
+## 5. How to Run
 
-## Future Improvements
+1. Clone this repository into a Databricks Git folder.
+2. Open `notebooks/nyc_taxi_databricks_analytics.ipynb`.
+3. Attach a cluster with Spark, Python, Delta Lake, and Unity Catalog support.
+4. Confirm the configuration section near the top of the notebook:
 
-- Move reusable notebook logic into tested modules under `src/`.
-- Add environment and dependency automation for Databricks jobs.
-- Add data quality checks for schema drift and anomaly detection.
-- Schedule the pipeline as a Databricks Workflow.
-- Track model experiments and metrics with MLflow.
+   ```python
+   CATALOG = "workspace"
+   SCHEMA = "bde"
+   VOLUME = "nyc_taxi"
+   RUN_DOWNLOADS = True
+   ALLOW_RUNTIME_PIP_INSTALL = True
+   OVERWRITE_TABLES = True
+   ```
 
-## License
+5. Upload `taxi_zone_lookup.csv` to:
 
-For academic and portfolio use unless otherwise specified by the data provider or institution.
+   ```text
+   /Volumes/<catalog>/<schema>/<volume>/taxi_zone_lookup.csv
+   ```
+
+6. Run all notebook cells from top to bottom.
+7. Export a refreshed HTML report after material logic or output changes.
+
+The notebook writes these main outputs:
+
+```text
+<catalog>.<schema>.taxi_zone_lookup
+<catalog>.<schema>.taxi_trips_cleaned_borough
+/Volumes/<catalog>/<schema>/<volume>/models/model_a_ridge_v1
+```
+
+## 6. Current Lessons
+
+- **Data quality rules should be visible, not hidden.** The latest exported run
+  removed 16.8M rows, or 1.69% of the raw dataset, while preserving a large
+  clean analytical base.
+- **Borough context makes the data business-readable.** Zone enrichment turns
+  trip-level records into interpretable pickup/dropoff flows for route,
+  revenue, and operations analysis.
+- **Manhattan remains the dominant revenue engine.** In the latest exported
+  2024 route summary, Manhattan-to-Manhattan trips account for the largest
+  revenue share.
+- **Notebook-first work still needs production habits.** Configuration flags,
+  train-only encoders, clean artifact paths, and cleared outputs make the
+  notebook easier to review and rerun.
+- **Model cells need deterministic reruns after code changes.** The current
+  notebook source includes a fix for the exported run's modeling helper
+  mismatch; rerun Databricks and regenerate the HTML report for final model
+  outputs.
+
+## 7. Next Work
+
+- Rerun the refined notebook in Databricks and replace the exported HTML report
+  with the successful full-run output.
+- Schedule the workflow as a Databricks Workflow with explicit task boundaries
+  for ingestion, transformation, analytics, and modeling.
+- Add MLflow tracking for model parameters, metrics, and artifacts.
+- Move stable notebook functions into tested `src/` modules once the workflow
+  graduates from portfolio notebook to reusable production pipeline.
+- Add schema drift checks, source file manifests, and automated data quality
+  assertions.
+- Publish a concise model results page under `docs/` after the corrected model
+  section is rerun.
+
+## 8. Git Hygiene
+
+Do not commit raw taxi data, Databricks working directories, local model
+checkpoints, notebook checkpoints, Python caches, or ad hoc experiment dumps.
+Commit the clean source notebook and lightweight reviewer artifacts only.
+
+## 9. License
+
+For academic and portfolio use unless otherwise specified by the data provider
+or institution.
