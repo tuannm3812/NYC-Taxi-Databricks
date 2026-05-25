@@ -2,44 +2,67 @@
 
 Notebook: `notebooks/nyc_taxi_databricks_analytics.ipynb`
 
-## Purpose
+## 1. Purpose
 
-The notebook implements an end-to-end NYC taxi analytics workflow in Databricks. It converts raw green and yellow taxi trip files into a curated analytical dataset, answers route and revenue questions, and trains predictive models from engineered trip features.
+The notebook implements a Databricks lakehouse workflow for NYC green and
+yellow taxi trip data. It builds a curated borough-enriched Delta table, answers
+business questions with Spark SQL, and trains lightweight predictive models from
+engineered trip features.
 
-## Workflow
+## 2. Runtime Modes
 
-1. **Lakehouse Setup and Ingestion**
-   - Configure Spark timezone for NYC-local temporal features.
-   - Define Unity Catalog and volume paths.
-   - Download green and yellow taxi Parquet files into Databricks storage.
-   - Register taxi zone lookup data as Delta.
+The configuration section controls optional work:
 
-2. **Data Preparation**
-   - Harmonize green and yellow taxi schemas.
-   - Union trips into a consistent dataset.
-   - Derive duration, distance, speed, temporal, and fare-efficiency features.
-   - Apply data quality filters while retaining visibility into row removal.
-   - Enrich pickup and drop-off locations with borough metadata.
+- `RUN_DOWNLOADS`: downloads raw Parquet files into the configured volume.
+- `ALLOW_RUNTIME_PIP_INSTALL`: permits installing `gdown` inside the notebook.
+- `OVERWRITE_TABLES`: controls whether Delta tables/artifacts are overwritten.
+- `RUN_PROFILE_PREVIEWS`: enables raw schema and sample-row displays.
+- `RUN_MODEL_DIAGNOSTICS`: enables extra fare and feature diagnostics.
 
-3. **Business Analytics**
-   - Summarize monthly taxi activity.
-   - Compare descriptive statistics by taxi color.
-   - Analyze pickup-to-dropoff borough flows by month, day, and hour.
-   - Identify high-revenue borough-pair routes.
-   - Evaluate tip percentages and fare efficiency.
-   - Compare travel speed and distance economics across duration bands.
+Normal reruns should keep previews and diagnostics disabled to reduce runtime.
+The notebook still reports required raw row counts by taxi color because this
+is an assignment requirement.
 
-4. **Machine Learning**
-   - Split datasets for training, validation, and testing.
-   - Build a route-time baseline model.
-   - Apply target encoding without validation or test leakage.
-   - Standardize numeric features.
-   - Assemble feature vectors and train Spark ML models.
-   - Summarize model performance and project conclusions.
+## 3. Workflow
 
-## Handover Notes
+1. **Lakehouse Build**
+   - Configure imports, Spark timezone, Unity Catalog objects, and volume paths.
+   - Load raw green and yellow taxi Parquet files.
+   - Register the taxi zone lookup as a Delta table.
+   - Harmonize service-specific schemas into one trip table.
+   - Engineer duration, distance, speed, temporal, and fare-efficiency fields.
+   - Apply data quality filters and report row retention.
+   - Persist the borough-enriched curated Delta table.
 
-- The notebook is the executable source of truth.
-- The HTML report is the review artifact for stakeholders who do not need to run Databricks.
-- The PDF report is retained as a formal handover document.
-- The `src/` folders provide a migration path from exploratory notebook workflow to reusable production modules.
+2. **Business Analytics**
+   - Summarize monthly demand and revenue.
+   - Compare green and yellow taxi distributions.
+   - Build a borough route-time demand grid.
+   - Rank 2024 borough-pair revenue routes.
+   - Measure tip participation and high-tip share.
+   - Compare speed, distance efficiency, and revenue per hour by duration band.
+
+3. **Machine Learning**
+   - Create time-based train, validation, and test splits.
+   - Build a hierarchical route-time baseline.
+   - Fit robust label clipping from training data only.
+   - Fit target encoders and standardization stats from training data only.
+   - Train ridge, gradient-descent, Huber, and fallback tree-style models.
+   - Compare RMSE and persist selected Model A artifacts.
+
+## 4. Design Notes
+
+- The row-retention audit is the primary full-data quality checkpoint.
+- Raw DataFrame previews are optional because they are not needed for every run.
+- Model diagnostics are optional because pairwise correlation checks are useful
+  for review but expensive on large Spark tables.
+- VIF analysis from the previous successful run is summarized in
+  `docs/2_run_insights.md`; it is not part of the default rerun path.
+- The notebook stays self-contained; `src/` is reserved for future
+  productionized modules.
+
+## 5. Reviewer Artifacts
+
+- `reports/nyc_taxi_databricks_analytics.html`: exported notebook report.
+- `reports/nyc_taxi_databricks_handover_report.pdf`: formal handover report.
+- `docs/project_handover.md`: editable handover source.

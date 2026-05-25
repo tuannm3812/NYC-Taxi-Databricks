@@ -1,35 +1,90 @@
-# Databricks Setup Notes
+# Databricks Setup
 
-## Runtime
+## 1. Runtime
 
-- Use a Databricks Runtime that supports Spark, Delta Lake, and Python.
-- A single-node cluster is sufficient for development and review; use autoscaling for larger runs.
-- The notebook sets Spark timezone to `America/New_York` so hour and weekday features align with NYC taxi operations.
+Use a Databricks Runtime with Spark, Python, Delta Lake, and Unity Catalog
+support. A single-node cluster is enough for code review and smaller reruns;
+autoscaling is recommended for full-scale execution over the taxi dataset.
 
-## Storage Layout
+The notebook sets:
 
-The notebook uses Unity Catalog volume paths for raw green and yellow taxi files:
+```python
+spark.conf.set("spark.sql.session.timeZone", "America/New_York")
+```
+
+This keeps hour, weekday, and month features aligned with NYC taxi operations.
+
+## 2. Storage Layout
+
+Default Unity Catalog values:
+
+```python
+CATALOG = "workspace"
+SCHEMA = "bde"
+VOLUME = "nyc_taxi"
+```
+
+Default volume paths:
 
 ```text
 /Volumes/workspace/bde/nyc_taxi/green
 /Volumes/workspace/bde/nyc_taxi/yellow
+/Volumes/workspace/bde/nyc_taxi/taxi_zone_lookup.csv
+/Volumes/workspace/bde/nyc_taxi/models/model_a_ridge_v1
 ```
 
-If your workspace uses different catalog, schema, or volume names, update the setup variables at the top of the notebook before execution.
+Update the configuration cell if your workspace uses different names.
 
-## Execution Workflow
+## 3. Required Input
 
-1. Clone the repository into Databricks Repos.
+Upload the NYC taxi zone lookup file before running the notebook:
+
+```text
+/Volumes/<catalog>/<schema>/<volume>/taxi_zone_lookup.csv
+```
+
+The green and yellow taxi Parquet files can be downloaded by the notebook when
+`RUN_DOWNLOADS = True`. Existing raw files are skipped so repeated reruns do not
+download the same large files again.
+
+## 4. Runtime Flags
+
+Recommended values for a normal full rerun:
+
+```python
+RUN_DOWNLOADS = True
+ALLOW_RUNTIME_PIP_INSTALL = True
+OVERWRITE_TABLES = True
+RUN_PROFILE_PREVIEWS = False
+RUN_MODEL_DIAGNOSTICS = False
+```
+
+Use `RUN_PROFILE_PREVIEWS = True` only when inspecting raw schemas or samples.
+Use `RUN_MODEL_DIAGNOSTICS = True` only when preparing appendix evidence.
+
+## 5. Execution Workflow
+
+1. Clone this repository into a Databricks Git folder.
 2. Open `notebooks/nyc_taxi_databricks_analytics.ipynb`.
-3. Attach a compatible cluster.
-4. Confirm data access permissions and Unity Catalog paths.
-5. Run all cells in order.
-6. Export a refreshed HTML report after any material logic or output change.
+3. Attach compatible compute.
+4. Confirm catalog, schema, volume, and runtime flags.
+5. Confirm the taxi zone lookup CSV exists in the configured volume.
+6. Run all cells in order.
+7. Export a refreshed HTML report after any material logic or output change.
 
-## Engineering Standards
+## 6. Expected Outputs
 
-- Keep configuration values grouped in the setup section.
-- Avoid local-only paths in committed notebooks.
-- Do not commit secrets, tokens, or private credentials.
-- Keep markdown narratives short, decision-oriented, and tied to the outputs.
-- Move repeated logic into `src/` modules as the workflow matures.
+```text
+<catalog>.<schema>.taxi_zone_lookup
+<catalog>.<schema>.taxi_trips_cleaned_borough
+/Volumes/<catalog>/<schema>/<volume>/models/model_a_ridge_v1
+```
+
+## 7. Troubleshooting
+
+- If `CREATE CATALOG`, `CREATE SCHEMA`, or `CREATE VOLUME` fails, ask a
+  Databricks admin to create the objects or grant the required permissions.
+- If `gdown` cannot be installed, install it on the cluster or set
+  `ALLOW_RUNTIME_PIP_INSTALL = False` after making the package available.
+- If the notebook rerun is slow, keep previews and diagnostics disabled and
+  confirm the source files already exist in the configured volume.

@@ -55,6 +55,9 @@ the analytical decisions and handover path.
 .
 |-- README.md
 |-- docs/
+|   |-- 0_coding_standards.md
+|   |-- 1_assignment_brief.md
+|   |-- 2_run_insights.md
 |   |-- databricks_setup.md
 |   |-- notebook_summary.md
 |   `-- project_handover.md
@@ -82,6 +85,12 @@ job modules are introduced.
   exported analysis report for reviewers.
 - [reports/nyc_taxi_databricks_handover_report.pdf](reports/nyc_taxi_databricks_handover_report.pdf) -
   formal handover report.
+- [docs/0_coding_standards.md](docs/0_coding_standards.md) - notebook,
+  runtime, documentation, and git hygiene standards.
+- [docs/1_assignment_brief.md](docs/1_assignment_brief.md) - assignment
+  requirements summarized as project tasks.
+- [docs/2_run_insights.md](docs/2_run_insights.md) - key findings and model
+  results extracted from the successful v2 Databricks run.
 - [docs/databricks_setup.md](docs/databricks_setup.md) - Databricks runtime,
   storage, and execution guidance.
 - [docs/notebook_summary.md](docs/notebook_summary.md) - technical workflow
@@ -103,6 +112,8 @@ job modules are introduced.
    RUN_DOWNLOADS = True
    ALLOW_RUNTIME_PIP_INSTALL = True
    OVERWRITE_TABLES = True
+   RUN_PROFILE_PREVIEWS = False
+   RUN_MODEL_DIAGNOSTICS = False
    ```
 
 5. Upload `taxi_zone_lookup.csv` to:
@@ -136,6 +147,11 @@ The notebook writes these main outputs:
 - **Notebook-first work still needs production habits.** Configuration flags,
   train-only encoders, clean artifact paths, and cleared outputs make the
   notebook easier to review and rerun.
+- **Optional diagnostics should stay opt-in.** Raw previews and feature
+  diagnostics are useful for development, but disabling them keeps normal
+  Databricks reruns focused on the core evidence.
+- **VIF is useful but expensive.** The successful v2 run showed no severe
+  multicollinearity, so the default notebook now skips VIF-style diagnostics.
 - **Model cells need deterministic reruns after code changes.** The current
   notebook source includes a fix for the exported run's modeling helper
   mismatch; rerun Databricks and regenerate the HTML report for final model
