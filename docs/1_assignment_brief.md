@@ -19,7 +19,7 @@ passenger count.
 
 ## 3. Required Work
 
-### Part 1: Data Ingestion and Preparation
+### 3.1 Data Ingestion and Preparation
 
 - Load green and yellow taxi trip data in Databricks.
 - Import the taxi zone lookup CSV.
@@ -32,7 +32,7 @@ passenger count.
 - Save the final cleaned and joined dataset as a table.
 - Count final table rows.
 
-### Part 2: Business Questions
+### 3.2 Business Questions
 
 Use SQL outputs for:
 
@@ -45,7 +45,7 @@ Use SQL outputs for:
 - duration-bin speed and distance-per-dollar analysis;
 - recommendation on which duration bin drivers should target for income.
 
-### Part 3: Machine Learning
+### 3.3 Machine Learning
 
 - Build at least two different models to predict `total_amount`.
 - Use the Part 2 route-time average as a baseline and calculate RMSE.

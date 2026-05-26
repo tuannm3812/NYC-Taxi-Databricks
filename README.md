@@ -57,10 +57,9 @@ the analytical decisions and handover path.
 |-- docs/
 |   |-- 0_coding_standards.md
 |   |-- 1_assignment_brief.md
-|   |-- 2_run_insights.md
-|   |-- databricks_setup.md
-|   |-- notebook_summary.md
-|   `-- project_handover.md
+|   |-- 2_databricks_setup.md
+|   |-- 3_notebook_summary.md
+|   `-- 4_project_handover.md
 |-- notebooks/
 |   `-- nyc_taxi_databricks_analytics.ipynb
 |-- reports/
@@ -89,14 +88,12 @@ job modules are introduced.
   runtime, documentation, and git hygiene standards.
 - [docs/1_assignment_brief.md](docs/1_assignment_brief.md) - assignment
   requirements summarized as project tasks.
-- [docs/2_run_insights.md](docs/2_run_insights.md) - key findings and model
-  results extracted from the successful v2 Databricks run.
-- [docs/databricks_setup.md](docs/databricks_setup.md) - Databricks runtime,
+- [docs/2_databricks_setup.md](docs/2_databricks_setup.md) - Databricks runtime,
   storage, and execution guidance.
-- [docs/notebook_summary.md](docs/notebook_summary.md) - technical workflow
+- [docs/3_notebook_summary.md](docs/3_notebook_summary.md) - technical workflow
   summary.
-- [docs/project_handover.md](docs/project_handover.md) - editable handover
-  report source.
+- [docs/4_project_handover.md](docs/4_project_handover.md) - editable
+  handover source with v2 run evidence.
 
 ## 5. How to Run
 

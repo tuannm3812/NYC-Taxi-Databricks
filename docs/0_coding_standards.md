@@ -1,5 +1,8 @@
 # Coding Standards
 
+This document defines the repository conventions used by the Databricks
+notebook, documentation, and reviewer artifacts.
+
 ## 1. Repository Scope
 
 This repository is notebook-first. The Databricks notebook is the executable
@@ -27,9 +30,10 @@ Use stable descriptive names for top-level project artifacts:
 Use numbered names in `docs/` when ordering matters:
 
 - `docs/0_coding_standards.md`
-- `docs/databricks_setup.md`
-- `docs/notebook_summary.md`
-- `docs/project_handover.md`
+- `docs/1_assignment_brief.md`
+- `docs/2_databricks_setup.md`
+- `docs/3_notebook_summary.md`
+- `docs/4_project_handover.md`
 
 Do not commit Databricks-imported notebooks under `reports/`.
 

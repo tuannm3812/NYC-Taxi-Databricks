@@ -1,5 +1,8 @@
 # Project Handover
 
+This document combines project handover notes and evidence from the successful
+Databricks v2 run.
+
 ## 1. Summary
 
 NYC Taxi Databricks Analytics is a notebook-first Databricks lakehouse project
@@ -59,7 +62,63 @@ business analytics, and trains fare prediction models from engineered features.
 - Do not commit raw data, model checkpoints, or duplicate notebook exports.
 - Move stable helpers into `src/` only when scheduling this as a production job.
 
-## 7. Recommended Next Work
+## 7. Run Evidence
+
+Source reviewed: `nyc_taxi_databricks_analytics_v2.html`.
+
+Data scale:
+
+- Green taxi rows: 83,484,688.
+- Yellow taxi rows: 907,982,776.
+- Raw total rows: 991,467,464.
+- Taxi zones loaded: 265.
+- Final clean rows: 974,672,551.
+- Removed rows: 16,794,913.
+- Removed percentage: 1.69%.
+
+The cleaning logic satisfies the assignment constraint that no more than 10% of
+the dataset should be removed.
+
+Business findings:
+
+- Manhattan-to-Manhattan was the largest 2024 borough-pair revenue route,
+  contributing 62.45% of 2024 revenue in the top-route output.
+- Queens-to-Manhattan was second, contributing 15.21%.
+- 62.94% of trips included tips.
+- Among tipped trips, 0.83% had tips of at least $15.
+- Green taxis had slightly higher average speed than yellow taxis in the
+  cleaned output: 20.51 km/h vs 18.91 km/h.
+
+Model results on true labels:
+
+| Model | Validation RMSE | Test RMSE |
+| --- | ---: | ---: |
+| Baseline | 16.948 | 103.391 |
+| Model A closed-form ridge | 13.356 | 102.847 |
+| Model B ridge gradient descent | 18.226 | 103.590 |
+| Model C Huber | 29.009 | 105.899 |
+| Model D fallback tree | 16.652 | 103.267 |
+
+Model A had the best validation RMSE and slightly beat the baseline on the
+October-December 2024 test split. Robust RMSE was much lower and more stable,
+which indicates extreme true-label fares strongly affect test RMSE.
+
+## 8. Diagnostics Decision
+
+The v2 run included correlation, coefficient, and VIF diagnostics. VIF values
+were modest, with the largest values around distance and duration features.
+However, VIF required extra pairwise correlation work over a large Spark table.
+
+The refined notebook keeps diagnostics opt-in through:
+
+```python
+RUN_MODEL_DIAGNOSTICS = False
+```
+
+This keeps the default run focused on required assignment outputs and model
+comparison while preserving optional diagnostic capability for appendix work.
+
+## 9. Recommended Next Work
 
 - Rerun the refined notebook in Databricks and replace the HTML report.
 - Add MLflow tracking for model parameters, metrics, and artifacts.

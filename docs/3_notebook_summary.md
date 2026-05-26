@@ -2,6 +2,10 @@
 
 Notebook: `notebooks/nyc_taxi_databricks_analytics.ipynb`
 
+This document summarizes the executable notebook flow. Assignment requirements
+are summarized in `docs/1_assignment_brief.md`, and run evidence is captured in
+`docs/4_project_handover.md`.
+
 ## 1. Purpose
 
 The notebook implements a Databricks lakehouse workflow for NYC green and
@@ -57,7 +61,7 @@ is an assignment requirement.
 - Model diagnostics are optional because pairwise correlation checks are useful
   for review but expensive on large Spark tables.
 - VIF analysis from the previous successful run is summarized in
-  `docs/2_run_insights.md`; it is not part of the default rerun path.
+  `docs/4_project_handover.md`; it is not part of the default rerun path.
 - The notebook stays self-contained; `src/` is reserved for future
   productionized modules.
 
@@ -65,4 +69,4 @@ is an assignment requirement.
 
 - `reports/nyc_taxi_databricks_analytics.html`: exported notebook report.
 - `reports/nyc_taxi_databricks_handover_report.pdf`: formal handover report.
-- `docs/project_handover.md`: editable handover source.
+- `docs/4_project_handover.md`: editable handover source.
