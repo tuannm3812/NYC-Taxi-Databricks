@@ -30,10 +30,13 @@ Use stable descriptive names for top-level project artifacts:
 Use numbered names in `docs/` when ordering matters:
 
 - `docs/0_coding_standards.md`
-- `docs/1_assignment_brief.md`
+- `docs/1_project_brief.md`
 - `docs/2_databricks_setup.md`
 - `docs/3_notebook_summary.md`
 - `docs/4_project_handover.md`
+- `docs/5_architecture.md`
+- `docs/6_data_quality.md`
+- `docs/7_model_results.md`
 
 Do not commit Databricks-imported notebooks under `reports/`.
 

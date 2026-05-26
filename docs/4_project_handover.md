@@ -56,7 +56,7 @@ business analytics, and trains fare prediction models from engineered features.
 
 ## 6. Operational Notes
 
-- Keep `RUN_PROFILE_PREVIEWS = False` for normal reruns.
+- Keep `RUN_PROFILE_PREVIEWS = False` for normal runs.
 - Keep `RUN_MODEL_DIAGNOSTICS = False` unless preparing appendix evidence.
 - Regenerate the HTML report after a successful Databricks run.
 - Do not commit raw data, model checkpoints, or duplicate notebook exports.
@@ -76,8 +76,8 @@ Data scale:
 - Removed rows: 16,794,913.
 - Removed percentage: 1.69%.
 
-The cleaning logic satisfies the assignment constraint that no more than 10% of
-the dataset should be removed.
+The cleaning logic is conservative: it removes 1.69% of raw rows while
+preserving enough data for stable analytics and model training.
 
 Business findings:
 
@@ -116,8 +116,8 @@ The refined notebook keeps diagnostics opt-in through:
 RUN_MODEL_DIAGNOSTICS = False
 ```
 
-This keeps the default run focused on required assignment outputs and model
-comparison while preserving optional diagnostic capability for appendix work.
+This keeps the default run focused on core evidence and model comparison while
+preserving optional diagnostic capability for deeper review.
 
 ## 9. Recommended Next Work
 
@@ -127,4 +127,5 @@ comparison while preserving optional diagnostic capability for appendix work.
 - Add schema drift checks and source file manifests.
 - Convert the notebook into a Databricks Workflow with separate tasks for
   ingestion, transformation, analytics, and modeling.
-- Publish a concise model results page after the corrected full run completes.
+- Add segment-level error analysis by taxi color, borough pair, and duration
+  bin.

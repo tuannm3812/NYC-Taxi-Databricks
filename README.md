@@ -77,10 +77,13 @@ and the documentation explains the **engineering and modeling decisions**.
 |-- README.md
 |-- docs/
 |   |-- 0_coding_standards.md
-|   |-- 1_assignment_brief.md
+|   |-- 1_project_brief.md
 |   |-- 2_databricks_setup.md
 |   |-- 3_notebook_summary.md
-|   `-- 4_project_handover.md
+|   |-- 4_project_handover.md
+|   |-- 5_architecture.md
+|   |-- 6_data_quality.md
+|   `-- 7_model_results.md
 |-- notebooks/
 |   `-- nyc_taxi_databricks_analytics.ipynb
 |-- reports/
@@ -106,14 +109,20 @@ boundaries if the notebook is later converted into scheduled Databricks jobs.
   formal handover report.
 - [docs/0_coding_standards.md](docs/0_coding_standards.md) - notebook,
   runtime, documentation, and git hygiene standards.
-- [docs/1_assignment_brief.md](docs/1_assignment_brief.md) - assignment
-  requirements summarized as project tasks.
+- [docs/1_project_brief.md](docs/1_project_brief.md) - project goals and
+  core analytical tasks.
 - [docs/2_databricks_setup.md](docs/2_databricks_setup.md) - Databricks runtime,
   storage, and execution guidance.
 - [docs/3_notebook_summary.md](docs/3_notebook_summary.md) - technical workflow
   summary.
 - [docs/4_project_handover.md](docs/4_project_handover.md) - editable
   handover source with v3 run evidence.
+- [docs/5_architecture.md](docs/5_architecture.md) - end-to-end lakehouse
+  flow and productionization path.
+- [docs/6_data_quality.md](docs/6_data_quality.md) - cleaning rules, row
+  retention evidence, and modeling implications.
+- [docs/7_model_results.md](docs/7_model_results.md) - model comparison,
+  selection rationale, and next modeling improvements.
 
 ## 6. How to Run
 
@@ -167,7 +176,26 @@ The notebook writes these main outputs:
 - **Model choice:** closed-form ridge regression provides the best validation
   RMSE with lower complexity than iterative alternatives.
 
-## 8. Roadmap
+## 8. Architecture
+
+```mermaid
+flowchart LR
+    A[Raw taxi Parquet] --> B[Schema harmonization]
+    C[Taxi zone lookup] --> D[Borough enrichment]
+    B --> E[Feature engineering]
+    E --> F[Quality filters]
+    F --> D
+    D --> G[Curated Delta table]
+    G --> H[Spark SQL analytics]
+    G --> I[ML feature assembly]
+    I --> J[Baseline and ML models]
+    J --> K[Model artifacts]
+```
+
+The full architecture notes are in
+[docs/5_architecture.md](docs/5_architecture.md).
+
+## 9. Roadmap
 
 - Add MLflow tracking for model parameters, metrics, and persisted artifacts.
 - Convert the notebook into a Databricks Workflow with explicit task boundaries
@@ -176,5 +204,5 @@ The notebook writes these main outputs:
   assertions for repeatable production runs.
 - Move stable notebook utilities into tested `src` modules once the workflow is
   scheduled as reusable pipeline code.
-- Publish a focused model-results note that compares baseline, ridge, Huber,
-  and fallback tree performance.
+- Add segment-level error analysis by taxi color, borough pair, and duration
+  bin.

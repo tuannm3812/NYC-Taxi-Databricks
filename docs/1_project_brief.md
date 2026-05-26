@@ -1,10 +1,10 @@
-# Assignment Brief
+# Project Brief
 
 ## 1. Aim
 
-Analyse a large NYC taxi dataset in Databricks Spark. The work must load and
-prepare the data, answer business questions with Spark SQL, and train machine
-learning models to predict a continuous outcome: `total_amount`.
+Analyse a large NYC taxi dataset in Databricks Spark. The project loads and
+prepares the data, answers business questions with Spark SQL, and trains
+machine learning models to predict a continuous outcome: `total_amount`.
 
 ## 2. Dataset Context
 
@@ -17,15 +17,15 @@ passenger count.
 - Green taxis were introduced in August 2013 to improve service availability
   in outer boroughs and designated areas.
 
-## 3. Required Work
+## 3. Core Work
 
 ### 3.1 Data Ingestion and Preparation
 
 - Load green and yellow taxi trip data in Databricks.
 - Import the taxi zone lookup CSV.
 - Explore schemas and clean unrealistic trips.
-- Do not remove rows solely because unused fields are missing.
-- Do not remove more than 10% of the dataset.
+- Preserve rows with missing values in unused fields.
+- Keep filtering conservative and report row retention.
 - Count total rows for green and yellow taxis.
 - Combine green and yellow trips despite schema differences.
 - Join pickup and drop-off locations to borough metadata.
@@ -54,17 +54,17 @@ Use SQL outputs for:
 - Compare models using RMSE and explain the chosen model.
 - Do not use `fare_amount` or `tolls_amount` as model features.
 
-## 4. Deliverables
+## 4. Portfolio Artifacts
 
-- Notebook in both `.ipynb` and HTML format.
-- Handover report as PDF, under 2500 words.
-- Any supporting documents needed for review.
-- Final submission as one zip file.
+- Executable Databricks notebook in `.ipynb` format.
+- Exported HTML report with Databricks outputs.
+- Handover PDF and supporting Markdown docs.
+- Architecture, data quality, and model results notes.
 
-## 5. Assessment Focus
+## 5. Quality Focus
 
 - Executable, well-commented code.
 - Justified transformation, cleaning, storage, and accuracy decisions.
-- Correct business-question outputs and useful recommendations.
-- Relevant machine learning models and comparison.
-- Clear, professional written report.
+- Correct business-question outputs and useful operational recommendations.
+- Relevant machine learning models with clear comparison.
+- Professional documentation for technical reviewers.
