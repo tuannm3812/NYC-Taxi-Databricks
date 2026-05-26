@@ -1,7 +1,7 @@
 # Project Handover
 
 This document combines project handover notes and evidence from the successful
-Databricks v2 run.
+Databricks v3 run.
 
 ## 1. Summary
 
@@ -52,7 +52,7 @@ business analytics, and trains fare prediction models from engineered features.
 - Closed-form ridge regression selected for artifact persistence.
 - Optional diagnostics for feature correlations and coefficients.
 - Long-running diagnostics such as VIF are kept out of the default run and
-  summarized separately from the successful v2 output.
+  summarized separately from the earlier diagnostic output.
 
 ## 6. Operational Notes
 
@@ -64,7 +64,7 @@ business analytics, and trains fare prediction models from engineered features.
 
 ## 7. Run Evidence
 
-Source reviewed: `nyc_taxi_databricks_analytics_v2.html`.
+Source reviewed: `nyc_taxi_databricks_analytics_v3.html`.
 
 Data scale:
 
@@ -93,7 +93,7 @@ Model results on true labels:
 
 | Model | Validation RMSE | Test RMSE |
 | --- | ---: | ---: |
-| Baseline | 16.948 | 103.391 |
+| Baseline | 17.461 | 103.391 |
 | Model A closed-form ridge | 13.356 | 102.847 |
 | Model B ridge gradient descent | 18.226 | 103.590 |
 | Model C Huber | 29.009 | 105.899 |
@@ -105,9 +105,10 @@ which indicates extreme true-label fares strongly affect test RMSE.
 
 ## 8. Diagnostics Decision
 
-The v2 run included correlation, coefficient, and VIF diagnostics. VIF values
-were modest, with the largest values around distance and duration features.
-However, VIF required extra pairwise correlation work over a large Spark table.
+Earlier diagnostics included correlation, coefficient, and VIF analysis. VIF
+values were modest, with the largest values around distance and duration
+features. However, VIF required extra pairwise correlation work over a large
+Spark table.
 
 The refined notebook keeps diagnostics opt-in through:
 
@@ -120,7 +121,8 @@ comparison while preserving optional diagnostic capability for appendix work.
 
 ## 9. Recommended Next Work
 
-- Rerun the refined notebook in Databricks and replace the HTML report.
+- Rerun the refined notebook in Databricks after material source changes and
+  replace the HTML report.
 - Add MLflow tracking for model parameters, metrics, and artifacts.
 - Add schema drift checks and source file manifests.
 - Convert the notebook into a Databricks Workflow with separate tasks for

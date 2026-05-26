@@ -93,7 +93,7 @@ job modules are introduced.
 - [docs/3_notebook_summary.md](docs/3_notebook_summary.md) - technical workflow
   summary.
 - [docs/4_project_handover.md](docs/4_project_handover.md) - editable
-  handover source with v2 run evidence.
+  handover source with v3 run evidence.
 
 ## 5. How to Run
 
@@ -147,17 +147,16 @@ The notebook writes these main outputs:
 - **Optional diagnostics should stay opt-in.** Raw previews and feature
   diagnostics are useful for development, but disabling them keeps normal
   Databricks reruns focused on the core evidence.
-- **VIF is useful but expensive.** The successful v2 run showed no severe
+- **VIF is useful but expensive.** Earlier diagnostics showed no severe
   multicollinearity, so the default notebook now skips VIF-style diagnostics.
-- **Model cells need deterministic reruns after code changes.** The current
-  notebook source includes a fix for the exported run's modeling helper
-  mismatch; rerun Databricks and regenerate the HTML report for final model
-  outputs.
+- **Train-only baselines matter.** The latest run fits baseline route-time
+  averages from the training split only, so validation RMSE is not inflated by
+  validation-label leakage.
 
 ## 7. Next Work
 
-- Rerun the refined notebook in Databricks and replace the exported HTML report
-  with the successful full-run output.
+- Rerun the refined notebook in Databricks after material source changes and
+  replace the exported HTML report with the successful full-run output.
 - Schedule the workflow as a Databricks Workflow with explicit task boundaries
   for ingestion, transformation, analytics, and modeling.
 - Add MLflow tracking for model parameters, metrics, and artifacts.
@@ -172,7 +171,9 @@ The notebook writes these main outputs:
 
 Do not commit raw taxi data, Databricks working directories, local model
 checkpoints, notebook checkpoints, Python caches, or ad hoc experiment dumps.
-Commit the clean source notebook and lightweight reviewer artifacts only.
+Commit the clean source notebook and lightweight reviewer artifacts by default.
+For assignment submission, an executed Databricks notebook can be exported and
+included alongside the HTML report.
 
 ## 9. License
 
