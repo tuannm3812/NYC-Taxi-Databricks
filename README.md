@@ -12,29 +12,30 @@
   <img src="https://s.abcnews.com/images/Business/nyc-taxis-gty-rc-200220_hpMain.jpg" alt="New York City yellow taxis" width="860">
 </p>
 
-Databricks lakehouse project for NYC green and yellow taxi trip data. The
-workflow ingests raw Parquet files, builds curated Delta tables, produces
-borough-level operational analytics, and trains Spark-based fare prediction
-models from engineered trip features.
+**Databricks lakehouse project** for NYC green and yellow taxi trip data. The
+workflow ingests **raw Parquet files**, builds **curated Delta tables**,
+produces **borough-level operational analytics**, and trains **Spark-based fare
+prediction models** from engineered trip features.
 
 The repository is organized for technical review: the notebook is the
-executable source, the HTML report captures the Databricks run output, and the
-documentation explains the engineering and modeling decisions.
+**executable source**, the HTML report captures the **Databricks run output**,
+and the documentation explains the **engineering and modeling decisions**.
 
 ## 1. Project Highlights
 
-- Processed nearly 1 billion raw taxi trips in Databricks using PySpark and
+- Processed **nearly 1 billion raw taxi trips** in Databricks using PySpark and
   Delta Lake.
-- Standardized green and yellow taxi schemas into a shared analytical model.
-- Applied explicit data quality rules and retained 974.7M clean trips from the
-  v3 Databricks run, removing 1.69% of raw rows.
+- Standardized **green and yellow taxi schemas** into a shared analytical
+  model.
+- Applied explicit data quality rules and retained **974.7M clean trips** from
+  the v3 Databricks run, removing **1.69%** of raw rows.
 - Enriched trips with NYC taxi zone and borough metadata from 265 locations.
 - Analyzed demand, revenue, tips, speed, duration, distance efficiency, and
   borough-to-borough route behavior.
 - Compared a hierarchical route-time baseline against ridge regression,
   gradient-descent ridge, Huber regression, and fallback tree-style scoring.
-- Selected closed-form ridge regression as the best validation model, improving
-  validation RMSE from 17.461 to 13.356.
+- Selected **closed-form ridge regression** as the best validation model,
+  improving validation RMSE from **17.461** to **13.356**.
 
 ## 2. Technical Skills
 
@@ -58,16 +59,16 @@ documentation explains the engineering and modeling decisions.
 
 | Area | Result |
 | --- | --- |
-| Raw rows | 991,467,464 |
-| Clean rows | 974,672,551 |
-| Rows removed | 16,794,913, or 1.69% |
+| Raw rows | **991,467,464** |
+| Clean rows | **974,672,551** |
+| Rows removed | **16,794,913**, or **1.69%** |
 | Taxi zones loaded | 265 |
-| Tip participation | 62.94% of trips |
-| High-tip share | 0.83% of tipped trips had tips of at least $15 |
-| Top 2024 revenue route | Manhattan to Manhattan |
-| Best validation model | Closed-form ridge regression |
-| Best validation RMSE | 13.356 |
-| Test RMSE for selected model | 102.847 |
+| Tip participation | **62.94%** of trips |
+| High-tip share | **0.83%** of tipped trips had tips of at least $15 |
+| Top 2024 revenue route | **Manhattan to Manhattan** |
+| Best validation model | **Closed-form ridge regression** |
+| Best validation RMSE | **13.356** |
+| Test RMSE for selected model | **102.847** |
 
 ## 4. Repository Structure
 
