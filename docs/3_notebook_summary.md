@@ -53,6 +53,8 @@ scale and validation checkpoints.
    - Fit target encoders and standardization stats from training data only.
    - Train ridge, gradient-descent, Huber, and fallback tree-style models.
    - Compare RMSE and persist selected Model A artifacts.
+   - Profile Model A errors by taxi color, duration bin, month, and borough
+     route pair.
 
 ## 4. Design Notes
 

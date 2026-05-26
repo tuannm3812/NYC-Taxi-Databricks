@@ -69,12 +69,36 @@ Model A is selected because it provides the best balance of:
 - **Operational fit:** the model is lightweight enough for notebook execution
   and can be migrated into a scheduled Databricks Workflow later.
 
-## 7. Next Modeling Improvements
+## 7. Segment Error Analysis
+
+The notebook now includes a `3.9 Segment Error Analysis` section for the
+selected Model A test predictions. It reports:
+
+- error by taxi color;
+- error by trip-duration bin;
+- error by test month;
+- highest-error pickup-to-drop-off borough pairs with enough test trips.
+
+Each segment table includes:
+
+| Metric | Meaning |
+| --- | --- |
+| `trip_count` | Number of test trips in the segment |
+| `avg_actual` | Average true `total_amount` |
+| `avg_predicted` | Average Model A prediction |
+| `bias` | Average prediction error, calculated as prediction minus actual |
+| `mae` | Mean absolute error |
+| `rmse` | Root mean squared error |
+
+This analysis turns aggregate RMSE into a more useful diagnostic view. It can
+show whether model error is concentrated in long trips, specific borough flows,
+or particular months in the out-of-time test period.
+
+## 8. Next Modeling Improvements
 
 - Track model runs with MLflow.
 - Add calendar features such as holiday and airport-period indicators.
 - Compare against Spark MLlib linear regression and gradient-boosted trees on a
   sampled or feature-limited training set.
 - Evaluate MAE alongside RMSE to reduce sensitivity to extreme fares.
-- Add segment-level error analysis by taxi color, borough pair, and duration
-  bin.
+- Add residual plots and bias monitoring once model outputs are persisted.

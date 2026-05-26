@@ -175,6 +175,9 @@ The notebook writes these main outputs:
   changing the selected model.
 - **Model choice:** closed-form ridge regression provides the best validation
   RMSE with lower complexity than iterative alternatives.
+- **Segment diagnostics:** model quality is reviewed by taxi color, duration
+  bin, month, and borough-pair route so aggregate RMSE does not hide weak
+  spots.
 
 ## 8. Architecture
 
@@ -204,5 +207,4 @@ The full architecture notes are in
   assertions for repeatable production runs.
 - Move stable notebook utilities into tested `src` modules once the workflow is
   scheduled as reusable pipeline code.
-- Add segment-level error analysis by taxi color, borough pair, and duration
-  bin.
+- Persist segment-level model monitoring tables for dashboarding.
