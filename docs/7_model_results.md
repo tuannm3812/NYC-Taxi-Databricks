@@ -69,6 +69,12 @@ Model A is selected because it provides the best balance of:
 - **Operational fit:** the model is lightweight enough for notebook execution
   and can be migrated into a scheduled Databricks Workflow later.
 
+The notebook can now reuse these artifacts by setting
+`RUN_MODEL_TRAINING = False` and `LOAD_MODEL_ARTIFACTS = True`. This mode
+skips baseline fitting and candidate model training, then reloads Model A
+weights, target encoders, z-score statistics, metadata, and robust-cap values
+for scoring and diagnostics.
+
 ## 7. Segment Error Analysis
 
 The v4 Databricks run includes a `3.9 Segment Error Analysis` section for the
@@ -93,6 +99,10 @@ Each segment table includes:
 This analysis turns aggregate RMSE into a more useful diagnostic view. It can
 show whether model error is concentrated in long trips, specific borough flows,
 or particular months in the out-of-time test period.
+
+When `SAVE_MODEL_PREDICTIONS = True`, the scored test set is also persisted to
+`workspace.bde.model_a_test_predictions` for faster downstream diagnostics and
+dashboarding.
 
 ## 8. V4 Segment Findings
 

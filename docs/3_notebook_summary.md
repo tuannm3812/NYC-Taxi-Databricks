@@ -21,11 +21,23 @@ The configuration section controls optional work:
 - `ALLOW_RUNTIME_PIP_INSTALL`: permits installing `gdown` inside the notebook.
 - `OVERWRITE_TABLES`: controls whether Delta tables/artifacts are overwritten.
 - `RUN_PROFILE_PREVIEWS`: enables raw schema and sample-row displays.
+- `RUN_MODEL_TRAINING`: fits baseline, Model A, and optional candidates.
+- `RUN_CANDIDATE_MODELS`: trains Model B, Model C, and Model D during a full
+  model run.
+- `LOAD_MODEL_ARTIFACTS`: loads persisted Model A weights, target encoders,
+  z-score statistics, and metadata instead of refitting them.
+- `SAVE_MODEL_PREDICTIONS`: persists scored Model A test predictions.
 - `RUN_MODEL_DIAGNOSTICS`: enables extra fare and feature diagnostics.
+- `RUN_SEGMENT_ERROR_ANALYSIS`: profiles Model A errors by business segment.
 
 Normal runs should keep previews and diagnostics disabled to reduce runtime.
 The notebook still reports raw row counts by taxi color because they are useful
 scale and validation checkpoints.
+
+For fast diagnostics after the first full training run, use
+`RUN_MODEL_TRAINING = False` with `LOAD_MODEL_ARTIFACTS = True`. This skips
+baseline fitting and candidate model training while preserving Model A scoring
+and segment error analysis.
 
 ## 3. Workflow
 
@@ -53,6 +65,8 @@ scale and validation checkpoints.
    - Fit target encoders and standardization stats from training data only.
    - Train ridge, gradient-descent, Huber, and fallback tree-style models.
    - Compare RMSE and persist selected Model A artifacts.
+   - Load saved Model A artifacts for faster repeat diagnostics when training
+     is disabled.
    - Profile Model A errors by taxi color, duration bin, month, and borough
      route pair.
 

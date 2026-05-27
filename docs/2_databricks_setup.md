@@ -56,11 +56,29 @@ RUN_DOWNLOADS = True
 ALLOW_RUNTIME_PIP_INSTALL = True
 OVERWRITE_TABLES = True
 RUN_PROFILE_PREVIEWS = False
+RUN_MODEL_TRAINING = True
+RUN_CANDIDATE_MODELS = True
+LOAD_MODEL_ARTIFACTS = False
+SAVE_MODEL_PREDICTIONS = True
 RUN_MODEL_DIAGNOSTICS = False
+RUN_SEGMENT_ERROR_ANALYSIS = True
 ```
 
 Use `RUN_PROFILE_PREVIEWS = True` only when inspecting raw schemas or samples.
 Use `RUN_MODEL_DIAGNOSTICS = True` only when preparing appendix evidence.
+
+For faster model diagnostics after the Model A artifacts have been created,
+reuse saved encoders, z-score statistics, metadata, and weights:
+
+```python
+RUN_MODEL_TRAINING = False
+RUN_CANDIDATE_MODELS = False
+LOAD_MODEL_ARTIFACTS = True
+RUN_SEGMENT_ERROR_ANALYSIS = True
+```
+
+This mode still rebuilds validation/test scoring frames from the curated table,
+but skips baseline fitting and candidate model training.
 
 ## 5. Execution Workflow
 
@@ -78,6 +96,7 @@ Use `RUN_MODEL_DIAGNOSTICS = True` only when preparing appendix evidence.
 <catalog>.<schema>.taxi_zone_lookup
 <catalog>.<schema>.taxi_trips_cleaned_borough
 /Volumes/<catalog>/<schema>/<volume>/models/model_a_ridge_v1
+<catalog>.<schema>.model_a_test_predictions
 ```
 
 ## 7. Troubleshooting
