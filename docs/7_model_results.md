@@ -71,7 +71,7 @@ Model A is selected because it provides the best balance of:
 
 ## 7. Segment Error Analysis
 
-The notebook now includes a `3.9 Segment Error Analysis` section for the
+The v4 Databricks run includes a `3.9 Segment Error Analysis` section for the
 selected Model A test predictions. It reports:
 
 - error by taxi color;
@@ -94,9 +94,54 @@ This analysis turns aggregate RMSE into a more useful diagnostic view. It can
 show whether model error is concentrated in long trips, specific borough flows,
 or particular months in the out-of-time test period.
 
-## 8. Next Modeling Improvements
+## 8. V4 Segment Findings
+
+Model A is directionally useful, but the segment diagnostics show two important
+patterns.
+
+First, the model systematically underpredicts fares. On the October-December
+2024 test split, average prediction bias is about -9 dollars for both taxi
+colors:
+
+| Segment | Trips | Average Actual | Average Predicted | Bias | MAE | RMSE |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Green | 150,850 | 24.21 | 14.96 | -9.25 | 9.36 | 13.02 |
+| Yellow | 10,678,396 | 29.00 | 19.62 | -9.38 | 9.86 | 103.56 |
+
+Second, RMSE is dominated by rare extreme fares. MAE is stable near 10 dollars
+for the full test window, but RMSE spikes in November and in the 10-20 minute
+duration bin:
+
+| Segment | Trips | Bias | MAE | RMSE |
+| --- | ---: | ---: | ---: | ---: |
+| October | 3,739,487 | -9.33 | 9.82 | 13.36 |
+| November | 3,545,286 | -9.14 | 9.62 | 178.70 |
+| December | 3,544,473 | -9.66 | 10.11 | 13.69 |
+| 10-20 Mins | 3,955,860 | -7.93 | 8.17 | 168.96 |
+
+Route-pair diagnostics show where the model underpredicts systematically:
+
+| Route Pair | Trips | Bias | MAE | RMSE |
+| --- | ---: | ---: | ---: | ---: |
+| Queens -> Unknown | 28,780 | -52.74 | 53.74 | 71.73 |
+| Manhattan -> EWR | 28,371 | -52.31 | 52.43 | 55.15 |
+| Queens -> Manhattan | 568,094 | -26.79 | 27.34 | 29.56 |
+| Manhattan -> Queens | 293,992 | -20.21 | 21.06 | 24.13 |
+| Manhattan -> Manhattan | 8,997,190 | -7.63 | 7.84 | 112.23 |
+
+The airport and unknown-location routes likely need explicit features. The
+Manhattan-to-Manhattan RMSE spike is not matched by its MAE, so it is likely
+driven by rare extreme fares inside a very large segment rather than broad
+day-to-day model failure.
+
+## 9. Next Modeling Improvements
 
 - Track model runs with MLflow.
+- Add a calibration step fitted on validation residuals to reduce the
+  systematic underprediction.
+- Add explicit airport/EWR and unknown-location route features.
+- Train a true-label ridge model alongside the robust-label ridge model and
+  compare RMSE, MAE, and bias.
 - Add calendar features such as holiday and airport-period indicators.
 - Compare against Spark MLlib linear regression and gradient-boosted trees on a
   sampled or feature-limited training set.

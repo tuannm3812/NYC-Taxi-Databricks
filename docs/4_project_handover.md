@@ -1,7 +1,7 @@
 # Project Handover
 
 This document combines project handover notes and evidence from the successful
-Databricks v3 run.
+Databricks v4 run.
 
 ## 1. Summary
 
@@ -64,7 +64,7 @@ business analytics, and trains fare prediction models from engineered features.
 
 ## 7. Run Evidence
 
-Source reviewed: `nyc_taxi_databricks_analytics_v3.html`.
+Source reviewed: `nyc_taxi_databricks_analytics_v4.html`.
 
 Data scale:
 
@@ -102,6 +102,12 @@ Model results on true labels:
 Model A had the best validation RMSE and slightly beat the baseline on the
 October-December 2024 test split. Robust RMSE was much lower and more stable,
 which indicates extreme true-label fares strongly affect test RMSE.
+
+The v4 segment diagnostics show that Model A systematically underpredicts test
+fares by about 9 dollars on average. MAE remains stable near 10 dollars, while
+RMSE spikes in November, the 10-20 minute duration bin, and high-volume
+Manhattan-to-Manhattan trips. This suggests rare extreme fares are driving the
+large RMSE more than broad model instability.
 
 ## 8. Diagnostics Decision
 

@@ -28,7 +28,7 @@ and the documentation explains the **engineering and modeling decisions**.
 - Standardized **green and yellow taxi schemas** into a shared analytical
   model.
 - Applied explicit data quality rules and retained **974.7M clean trips** from
-  the v3 Databricks run, removing **1.69%** of raw rows.
+  the v4 Databricks run, removing **1.69%** of raw rows.
 - Enriched trips with NYC taxi zone and borough metadata from 265 locations.
 - Analyzed demand, revenue, tips, speed, duration, distance efficiency, and
   borough-to-borough route behavior.
@@ -69,6 +69,7 @@ and the documentation explains the **engineering and modeling decisions**.
 | Best validation model | **Closed-form ridge regression** |
 | Best validation RMSE | **13.356** |
 | Test RMSE for selected model | **102.847** |
+| Test MAE pattern | About **9-10 dollars** across major segments |
 
 ## 4. Repository Structure
 
@@ -116,7 +117,7 @@ boundaries if the notebook is later converted into scheduled Databricks jobs.
 - [docs/3_notebook_summary.md](docs/3_notebook_summary.md) - technical workflow
   summary.
 - [docs/4_project_handover.md](docs/4_project_handover.md) - editable
-  handover source with v3 run evidence.
+  handover source with v4 run evidence.
 - [docs/5_architecture.md](docs/5_architecture.md) - end-to-end lakehouse
   flow and productionization path.
 - [docs/6_data_quality.md](docs/6_data_quality.md) - cleaning rules, row
@@ -161,7 +162,7 @@ The notebook writes these main outputs:
 
 ## 7. Technical Decisions
 
-- **Visible data quality controls:** the v3 run removed 16.8M rows, or 1.69%
+- **Visible data quality controls:** the v4 run removed 16.8M rows, or 1.69%
   of the raw dataset, while preserving a large clean analytical base.
 - **Borough-level enrichment:** zone metadata turns trip-level records into
   interpretable pickup/dropoff flows for route, revenue, and operations
@@ -178,6 +179,9 @@ The notebook writes these main outputs:
 - **Segment diagnostics:** model quality is reviewed by taxi color, duration
   bin, month, and borough-pair route so aggregate RMSE does not hide weak
   spots.
+- **Error interpretation:** v4 diagnostics show stable MAE but extreme RMSE in
+  specific segments, so future modeling should address outliers and
+  route-specific underprediction.
 
 ## 8. Architecture
 
