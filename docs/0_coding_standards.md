@@ -23,7 +23,8 @@ the project direction changes away from Databricks-managed storage.
 
 Use stable descriptive names for top-level project artifacts:
 
-- `notebooks/nyc_taxi_databricks_analytics.ipynb`
+- `notebooks/1_nyc_taxi_databricks_analytics.ipynb`
+- `notebooks/2_model_improvement.ipynb`
 - `reports/nyc_taxi_databricks_analytics.html`
 - `reports/nyc_taxi_databricks_handover_report.pdf`
 
@@ -37,6 +38,7 @@ Use numbered names in `docs/` when ordering matters:
 - `docs/5_architecture.md`
 - `docs/6_data_quality.md`
 - `docs/7_model_results.md`
+- `docs/8_next_work.md`
 
 Do not commit Databricks-imported notebooks under `reports/`.
 

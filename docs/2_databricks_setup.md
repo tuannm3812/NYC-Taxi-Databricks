@@ -83,7 +83,7 @@ but skips baseline fitting and candidate model training.
 ## 5. Execution Workflow
 
 1. Clone this repository into a Databricks Git folder.
-2. Open `notebooks/nyc_taxi_databricks_analytics.ipynb`.
+2. Open `notebooks/1_nyc_taxi_databricks_analytics.ipynb`.
 3. Attach compatible compute.
 4. Confirm catalog, schema, volume, and runtime flags.
 5. Confirm the taxi zone lookup CSV exists in the configured volume.

@@ -1,6 +1,6 @@
 # Notebook Summary
 
-Notebook: `notebooks/nyc_taxi_databricks_analytics.ipynb`
+Notebook: `notebooks/1_nyc_taxi_databricks_analytics.ipynb`
 
 This document summarizes the executable notebook flow. Project goals are
 summarized in `docs/1_project_brief.md`, and run evidence is captured in
@@ -89,6 +89,8 @@ and segment error analysis.
   modeling implications.
 - `docs/7_model_results.md`: model comparison, selection rationale, and next
   modeling improvements.
+- `docs/8_next_work.md`: focused plan for Model E, route-aware features,
+  temporal features, and productionization.
 
 ## 6. Reviewer Artifacts
 

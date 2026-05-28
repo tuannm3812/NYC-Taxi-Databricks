@@ -12,66 +12,105 @@
   <img src="https://s.abcnews.com/images/Business/nyc-taxis-gty-rc-200220_hpMain.jpg" alt="New York City yellow taxis" width="860">
 </p>
 
-**Databricks lakehouse project** for NYC green and yellow taxi trip data. The
-workflow ingests **raw Parquet files**, builds **curated Delta tables**,
-produces **borough-level operational analytics**, and trains **Spark-based fare
-prediction models** from engineered trip features.
+## 1. Overview
 
-The repository is organized for technical review: the notebook is the
-**executable source**, the HTML report captures the **Databricks run output**,
-and the documentation explains the **engineering and modeling decisions**.
+This project builds a **Databricks lakehouse analytics workflow** for NYC green
+and yellow taxi trips. It processes raw trip records at large scale, standardizes
+taxi schemas, enriches trips with borough metadata, answers operational business
+questions, and trains Spark-friendly models to predict `total_amount`.
 
-## 1. Project Highlights
+The project is now positioned as a **personal data engineering and analytics
+portfolio project**. The notebook remains the executable source of truth, while
+the exported HTML report and documentation capture the evidence, decisions, and
+model results.
 
-- Processed **nearly 1 billion raw taxi trips** in Databricks using PySpark and
-  Delta Lake.
-- Standardized **green and yellow taxi schemas** into a shared analytical
-  model.
-- Applied explicit data quality rules and retained **974.7M clean trips** from
-  the v4 Databricks run, removing **1.69%** of raw rows.
-- Enriched trips with NYC taxi zone and borough metadata from 265 locations.
-- Analyzed demand, revenue, tips, speed, duration, distance efficiency, and
-  borough-to-borough route behavior.
-- Compared a hierarchical route-time baseline against ridge regression,
-  gradient-descent ridge, Huber regression, and fallback tree-style scoring.
-- Selected **closed-form ridge regression** as the best validation model,
-  improving validation RMSE from **17.461** to **13.356**.
+## 2. Goal
 
-## 2. Technical Skills
+The main goal is to show an end-to-end big data workflow:
 
-- **Cloud analytics:** Databricks Workspace, Unity Catalog, Volumes, managed
-  Delta tables.
-- **Distributed data engineering:** PySpark DataFrames, Spark SQL, schema
-  harmonization, large-scale joins, aggregation, and persistence.
-- **Lakehouse design:** raw volume paths, curated tables, reusable artifact
-  paths, and governed table naming.
-- **Data quality:** timestamp bounds, distance/duration/fare filters, row
-  retention measurement, and borough enrichment checks.
-- **Analytics engineering:** route-level SQL metrics, monthly summaries,
-  revenue share analysis, tip behavior, and operational speed/distance KPIs.
-- **Machine learning:** time-based splitting, target encoding, feature
-  standardization, baseline modeling, closed-form ridge regression, gradient
-  descent, Huber loss, and model artifact persistence.
-- **Project communication:** exported HTML report, handover PDF, setup notes,
-  and notebook summary documentation.
+- ingest and harmonize **green** and **yellow** NYC taxi records;
+- engineer reliable trip, speed, distance, time, and fare features;
+- apply transparent quality filters without over-removing data;
+- save a curated **Delta Lake** table for analytics and modeling;
+- answer borough-level demand, revenue, tip, and duration-efficiency questions;
+- compare baseline and machine learning models for trip fare prediction;
+- diagnose model error by business segments so improvement work is targeted.
 
-## 3. Results Snapshot
+## 3. Key Metrics
 
 | Area | Result |
-| --- | --- |
-| Raw rows | **991,467,464** |
-| Clean rows | **974,672,551** |
-| Rows removed | **16,794,913**, or **1.69%** |
-| Taxi zones loaded | 265 |
-| Tip participation | **62.94%** of trips |
-| High-tip share | **0.83%** of tipped trips had tips of at least $15 |
-| Top 2024 revenue route | **Manhattan to Manhattan** |
+| --- | ---: |
+| Raw trips processed | **991,467,464** |
+| Clean trips retained | **974,672,551** |
+| Rows removed by quality filters | **16,794,913** |
+| Removal rate | **1.69%** |
+| Taxi zones loaded | **265** |
+| Trips with tips | **62.94%** |
+| Tipped trips with tips >= $15 | **0.83%** |
+| Top 2024 revenue route | **Manhattan -> Manhattan** |
+| Top 2024 route revenue share | **62.45%** |
 | Best validation model | **Closed-form ridge regression** |
+| Baseline validation RMSE | **17.461** |
 | Best validation RMSE | **13.356** |
-| Test RMSE for selected model | **102.847** |
-| Test MAE pattern | About **9-10 dollars** across major segments |
+| Selected model robust test RMSE | **12.613** |
 
-## 4. Repository Structure
+## 4. Progress
+
+Completed:
+
+- Built the Databricks notebook workflow from ingestion through analytics and
+  modeling.
+- Standardized different taxi schemas into one trip-level analytical model.
+- Persisted the curated borough-enriched dataset as a partitioned Delta table.
+- Produced SQL-based business outputs for demand, revenue, tips, route flows,
+  and duration efficiency.
+- Trained and compared a route-time baseline, closed-form ridge regression,
+  gradient-descent ridge, Huber regression, and fallback tree-style scoring.
+- Added model artifact persistence so the selected model can be reused for
+  faster diagnostics.
+- Added segment-level model error analysis by taxi color, month, duration bin,
+  and borough-pair route.
+
+Current finding:
+
+The selected ridge model improves validation RMSE, but diagnostics show a
+consistent underprediction of roughly **$9-10** across major test segments.
+Extreme fares create very large true-label RMSE in specific groups, especially
+November, Manhattan-heavy routes, airport/EWR routes, and `Unknown` borough
+segments. This makes the next modeling work clear: focus on **bias correction**,
+**route-specific features**, and **tail-aware evaluation**.
+
+## 5. Key Findings
+
+- **Data quality is controlled:** the cleaning rules remove only **1.69%** of
+  raw rows while filtering invalid timestamps, unrealistic durations,
+  unrealistic distances, and impossible speeds.
+- **Revenue is concentrated:** in 2024, **Manhattan -> Manhattan** contributes
+  **62.45%** of route-pair revenue, and the top routes dominate total revenue.
+- **Short trips are operationally attractive:** trips under five minutes have
+  the highest estimated revenue per hour, while longer trips generate larger
+  fares but lower hourly efficiency.
+- **Model A is the best current model:** closed-form ridge regression has the
+  best validation RMSE and stable robust test RMSE.
+- **Aggregate RMSE hides segment risk:** MAE is stable around **$9-10**, but
+  true-label RMSE spikes in a few route and month segments because of extreme
+  fare behavior.
+
+## 6. Technical Skills Demonstrated
+
+- **Databricks:** Workspace, Unity Catalog, Volumes, serverless/general compute,
+  notebook execution, and exported reports.
+- **Spark and Delta Lake:** PySpark DataFrames, Spark SQL, schema harmonization,
+  large-scale joins, partitioned Delta tables, and reusable model artifacts.
+- **Analytics engineering:** monthly KPI tables, route revenue ranking, tip
+  analysis, duration-efficiency metrics, and borough-pair analysis.
+- **Machine learning:** time-based splits, train-only preprocessing, target
+  encoding, z-score standardization, baseline modeling, ridge regression, Huber
+  loss, robust labels, and segment diagnostics.
+- **Project communication:** professional README, technical docs, Databricks
+  HTML output, and handover-style reporting.
+
+## 7. Repository Map
 
 ```text
 .
@@ -84,9 +123,11 @@ and the documentation explains the **engineering and modeling decisions**.
 |   |-- 4_project_handover.md
 |   |-- 5_architecture.md
 |   |-- 6_data_quality.md
-|   `-- 7_model_results.md
+|   |-- 7_model_results.md
+|   `-- 8_next_work.md
 |-- notebooks/
-|   `-- nyc_taxi_databricks_analytics.ipynb
+|   |-- 1_nyc_taxi_databricks_analytics.ipynb
+|   `-- 2_model_improvement.ipynb
 |-- reports/
 |   |-- nyc_taxi_databricks_analytics.html
 |   `-- nyc_taxi_databricks_handover_report.pdf
@@ -97,133 +138,15 @@ and the documentation explains the **engineering and modeling decisions**.
     `-- transformation/
 ```
 
-The project is notebook-first. The `src/` folders document the intended module
-boundaries if the notebook is later converted into scheduled Databricks jobs.
+The project is intentionally **notebook-first**. The `src/` folders document
+future module boundaries if the workflow is converted into Databricks Jobs or a
+scheduled production pipeline.
 
-## 5. Key Artifacts
+## 8. Documentation
 
-- [notebooks/nyc_taxi_databricks_analytics.ipynb](notebooks/nyc_taxi_databricks_analytics.ipynb) -
-  executable Databricks notebook.
-- [reports/nyc_taxi_databricks_analytics.html](reports/nyc_taxi_databricks_analytics.html) -
-  exported analysis report for reviewers.
-- [reports/nyc_taxi_databricks_handover_report.pdf](reports/nyc_taxi_databricks_handover_report.pdf) -
-  formal handover report.
-- [docs/0_coding_standards.md](docs/0_coding_standards.md) - notebook,
-  runtime, documentation, and git hygiene standards.
-- [docs/1_project_brief.md](docs/1_project_brief.md) - project goals and
-  core analytical tasks.
-- [docs/2_databricks_setup.md](docs/2_databricks_setup.md) - Databricks runtime,
-  storage, and execution guidance.
-- [docs/3_notebook_summary.md](docs/3_notebook_summary.md) - technical workflow
-  summary.
-- [docs/4_project_handover.md](docs/4_project_handover.md) - editable
-  handover source with v4 run evidence.
-- [docs/5_architecture.md](docs/5_architecture.md) - end-to-end lakehouse
-  flow and productionization path.
-- [docs/6_data_quality.md](docs/6_data_quality.md) - cleaning rules, row
-  retention evidence, and modeling implications.
-- [docs/7_model_results.md](docs/7_model_results.md) - model comparison,
-  selection rationale, and next modeling improvements.
-
-## 6. How to Run
-
-1. Clone this repository into a Databricks Git folder.
-2. Open `notebooks/nyc_taxi_databricks_analytics.ipynb`.
-3. Attach a cluster with Spark, Python, Delta Lake, and Unity Catalog support.
-4. Confirm the configuration section near the top of the notebook:
-
-   ```python
-   CATALOG = "workspace"
-   SCHEMA = "bde"
-   VOLUME = "nyc_taxi"
-   RUN_DOWNLOADS = True
-   ALLOW_RUNTIME_PIP_INSTALL = True
-   OVERWRITE_TABLES = True
-   RUN_PROFILE_PREVIEWS = False
-   RUN_MODEL_TRAINING = True
-   RUN_CANDIDATE_MODELS = True
-   LOAD_MODEL_ARTIFACTS = False
-   SAVE_MODEL_PREDICTIONS = True
-   RUN_MODEL_DIAGNOSTICS = False
-   RUN_SEGMENT_ERROR_ANALYSIS = True
-   ```
-
-5. Upload `taxi_zone_lookup.csv` to:
-
-   ```text
-   /Volumes/<catalog>/<schema>/<volume>/taxi_zone_lookup.csv
-   ```
-
-6. Run all notebook cells from top to bottom.
-7. Export a refreshed HTML report after logic or output changes.
-
-The notebook writes these main outputs:
-
-```text
-<catalog>.<schema>.taxi_zone_lookup
-<catalog>.<schema>.taxi_trips_cleaned_borough
-/Volumes/<catalog>/<schema>/<volume>/models/model_a_ridge_v1
-<catalog>.<schema>.model_a_test_predictions
-```
-
-For faster model diagnostics after Model A artifacts already exist, set:
-
-```python
-RUN_MODEL_TRAINING = False
-RUN_CANDIDATE_MODELS = False
-LOAD_MODEL_ARTIFACTS = True
-RUN_SEGMENT_ERROR_ANALYSIS = True
-```
-
-## 7. Technical Decisions
-
-- **Visible data quality controls:** the v4 run removed 16.8M rows, or 1.69%
-  of the raw dataset, while preserving a large clean analytical base.
-- **Borough-level enrichment:** zone metadata turns trip-level records into
-  interpretable pickup/dropoff flows for route, revenue, and operations
-  analysis.
-- **Train-only modeling assets:** target encoders, standardization statistics,
-  robust label caps, and baseline maps are fitted from training data only.
-- **Focused default execution:** raw previews and model diagnostics are opt-in
-  so the main Databricks run stays centered on required evidence.
-- **Efficient diagnostics:** VIF-style checks are documented from earlier
-  diagnostics but kept outside the default run because they add cost without
-  changing the selected model.
-- **Model choice:** closed-form ridge regression provides the best validation
-  RMSE with lower complexity than iterative alternatives.
-- **Segment diagnostics:** model quality is reviewed by taxi color, duration
-  bin, month, and borough-pair route so aggregate RMSE does not hide weak
-  spots.
-- **Error interpretation:** v4 diagnostics show stable MAE but extreme RMSE in
-  specific segments, so future modeling should address outliers and
-  route-specific underprediction.
-
-## 8. Architecture
-
-```mermaid
-flowchart LR
-    A[Raw taxi Parquet] --> B[Schema harmonization]
-    C[Taxi zone lookup] --> D[Borough enrichment]
-    B --> E[Feature engineering]
-    E --> F[Quality filters]
-    F --> D
-    D --> G[Curated Delta table]
-    G --> H[Spark SQL analytics]
-    G --> I[ML feature assembly]
-    I --> J[Baseline and ML models]
-    J --> K[Model artifacts]
-```
-
-The full architecture notes are in
-[docs/5_architecture.md](docs/5_architecture.md).
-
-## 9. Roadmap
-
-- Add MLflow tracking for model parameters, metrics, and persisted artifacts.
-- Convert the notebook into a Databricks Workflow with explicit task boundaries
-  for ingestion, transformation, analytics, and modeling.
-- Add schema drift checks, source file manifests, and automated data quality
-  assertions for repeatable production runs.
-- Move stable notebook utilities into tested `src` modules once the workflow is
-  scheduled as reusable pipeline code.
-- Persist segment-level model monitoring tables for dashboarding.
+The main executable workflow is
+[notebooks/1_nyc_taxi_databricks_analytics.ipynb](notebooks/1_nyc_taxi_databricks_analytics.ipynb).
+The next modeling stage starts in
+[notebooks/2_model_improvement.ipynb](notebooks/2_model_improvement.ipynb).
+Detailed setup, architecture, data quality, model results, and next-work notes
+are maintained in `docs/`.

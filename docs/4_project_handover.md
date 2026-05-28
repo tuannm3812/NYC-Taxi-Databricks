@@ -127,11 +127,7 @@ preserving optional diagnostic capability for deeper review.
 
 ## 9. Recommended Next Work
 
-- Rerun the refined notebook in Databricks after material source changes and
-  replace the HTML report.
-- Add MLflow tracking for model parameters, metrics, and artifacts.
-- Add schema drift checks and source file manifests.
-- Convert the notebook into a Databricks Workflow with separate tasks for
-  ingestion, transformation, analytics, and modeling.
-- Add segment-level error analysis by taxi color, borough pair, and duration
-  bin.
+The active next-work plan is maintained in `docs/8_next_work.md`. The immediate
+priority is the second notebook, `notebooks/2_model_improvement.ipynb`, where
+Model E calibration, route-aware features, and temporal features can be tested
+without lengthening the main end-to-end notebook.
