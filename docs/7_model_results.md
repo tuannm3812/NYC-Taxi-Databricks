@@ -1,7 +1,7 @@
 # Model Results
 
-This document summarizes the fare prediction modeling workflow and explains why
-closed-form ridge regression is the selected model.
+This document summarizes the fare prediction modeling workflow, the base ridge
+model, and the later Model E calibration improvement.
 
 ## 1. Objective
 
@@ -59,7 +59,8 @@ true-label target while also performing well on robust diagnostics.
 
 ## 6. Selection Rationale
 
-Model A is selected because it provides the best balance of:
+Model A was selected as the best base model because it provides the best balance
+of:
 
 - **Accuracy:** lowest validation RMSE on true fare labels.
 - **Simplicity:** closed-form ridge has fewer tuning knobs than iterative
@@ -75,7 +76,51 @@ skips baseline fitting and candidate model training, then reloads Model A
 weights, target encoders, z-score statistics, metadata, and robust-cap values
 for scoring and diagnostics.
 
-## 7. Segment Error Analysis
+## 7. Model Improvement Results
+
+The second notebook, `notebooks/2_model_improvement.ipynb`, starts from the
+curated Delta table and saved Model A artifacts. It tests validation-fitted
+calibration and route-aware enhanced ridge features without rebuilding the full
+lakehouse.
+
+Model E route calibration is the strongest current model. It applies residual
+corrections learned from the validation window and shrunk by route-pair support.
+
+| Model | True RMSE | MAE | Bias | Robust RMSE |
+| --- | ---: | ---: | ---: | ---: |
+| Model A artifact | 102.847 | 9.851 | -9.373 | 12.613 |
+| Model F enhanced ridge | 102.453 | 5.255 | -3.535 | 8.941 |
+| Model E global calibration | 102.419 | 5.308 | -0.227 | 8.613 |
+| Model E color calibration | 102.419 | 5.308 | -0.228 | 8.614 |
+| **Model E route calibration** | **102.284** | **4.197** | **-0.533** | **7.117** |
+
+The improvement is clearest in practical error metrics: MAE drops by more than
+half, and average bias is close to zero. Raw RMSE improves only slightly because
+it remains dominated by a very small number of extreme fare records.
+
+## 8. Operational Metric View
+
+The model-improvement notebook reports both transparent full metrics and an
+operational view that isolates extreme anomaly-like rows.
+
+| Metric View | Rows | RMSE | MAE | Bias |
+| --- | ---: | ---: | ---: | ---: |
+| Full raw metric | 10,829,246 | 102.284 | 4.197 | -0.533 |
+| Full capped at 1000 | 10,829,246 | 7.902 | 4.166 | -0.502 |
+| Operational filtered | 10,827,495 | 7.762 | 4.151 | -0.486 |
+
+Only 1,751 rows, or 0.0162% of the test set, are flagged as operational
+anomalies. They include three rows above the extreme amount threshold and a set
+of very high fare-per-minute or high-fare Manhattan internal records. These
+rows dominate squared error despite having little impact on MAE.
+
+The notebook persists:
+
+- `workspace.bde.model_e_test_predictions`
+- `workspace.bde.model_f_test_predictions`
+- `workspace.bde.model_e_tail_review`
+
+## 9. Segment Error Analysis
 
 The v4 Databricks run includes a `3.9 Segment Error Analysis` section for the
 selected Model A test predictions. It reports:
@@ -104,7 +149,7 @@ When `SAVE_MODEL_PREDICTIONS = True`, the scored test set is also persisted to
 `workspace.bde.model_a_test_predictions` for faster downstream diagnostics and
 dashboarding.
 
-## 8. V4 Segment Findings
+## 10. V4 Segment Findings
 
 Model A is directionally useful, but the segment diagnostics show two important
 patterns.
@@ -144,16 +189,16 @@ Manhattan-to-Manhattan RMSE spike is not matched by its MAE, so it is likely
 driven by rare extreme fares inside a very large segment rather than broad
 day-to-day model failure.
 
-## 9. Next Modeling Improvements
+## 11. Next Modeling Improvements
 
 - Track model runs with MLflow.
-- Add a calibration step fitted on validation residuals to reduce the
-  systematic underprediction.
-- Add explicit airport/EWR and unknown-location route features.
+- Promote Model E route calibration into the main reporting flow.
+- Add explicit airport/EWR and unknown-location route features for remaining
+  high-fare special cases.
 - Train a true-label ridge model alongside the robust-label ridge model and
   compare RMSE, MAE, and bias.
 - Add calendar features such as holiday and airport-period indicators.
 - Compare against Spark MLlib linear regression and gradient-boosted trees on a
   sampled or feature-limited training set.
-- Evaluate MAE alongside RMSE to reduce sensitivity to extreme fares.
-- Add residual plots and bias monitoring once model outputs are persisted.
+- Keep reporting full raw, capped, and operational-filtered metrics together so
+  the outlier impact remains transparent.

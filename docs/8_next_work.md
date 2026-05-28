@@ -2,12 +2,17 @@
 
 ## 1. Modeling Improvements
 
-- Add **bias-calibrated Model E** using validation residual correction.
-- Add route indicators for **airport**, **EWR**, and **Unknown borough** trips.
-- Add `year` or month-index features to capture long-term fare changes.
-- Compare true-label RMSE, robust RMSE, MAE, and bias after each change.
+- Promote **Model E route calibration** into the main model narrative.
+- Add route indicators for **airport**, **EWR**, and **Unknown borough** trips
+  to address remaining high-fare special cases.
+- Add `year` or month-index features to capture long-term fare changes if they
+  improve operational metrics.
+- Compare full raw, capped, operational-filtered, robust, MAE, and bias metrics
+  after each change.
 - Keep segment-level diagnostics by taxi color, month, duration bin, and
   borough-pair route as the main model review lens.
+- Keep `workspace.bde.model_e_tail_review` as the audit table for outlier and
+  anomaly follow-up.
 
 ## 2. Notebook Direction
 
@@ -29,4 +34,3 @@ improve validation and test diagnostics clearly.
   ingestion, transformation, analytics, training, and diagnostics.
 - Move reusable helper logic into `src/` modules when the workflow becomes a
   scheduled pipeline rather than a notebook-first project.
-

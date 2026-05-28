@@ -49,10 +49,13 @@ The main goal is to show an end-to-end big data workflow:
 | Tipped trips with tips >= $15 | **0.83%** |
 | Top 2024 revenue route | **Manhattan -> Manhattan** |
 | Top 2024 route revenue share | **62.45%** |
-| Best validation model | **Closed-form ridge regression** |
+| Best base model | **Closed-form ridge regression** |
+| Best improved model | **Route-calibrated Model E** |
 | Baseline validation RMSE | **17.461** |
 | Best validation RMSE | **13.356** |
-| Selected model robust test RMSE | **12.613** |
+| Model E test MAE | **4.197** |
+| Model E test bias | **-0.533** |
+| Operational filtered RMSE | **7.762** |
 
 ## 4. Progress
 
@@ -70,15 +73,17 @@ Completed:
   faster diagnostics.
 - Added segment-level model error analysis by taxi color, month, duration bin,
   and borough-pair route.
+- Added a second model-improvement notebook with validation-fitted route
+  calibration, enhanced ridge features, and operational tail-anomaly reporting.
 
 Current finding:
 
-The selected ridge model improves validation RMSE, but diagnostics show a
-consistent underprediction of roughly **$9-10** across major test segments.
-Extreme fares create very large true-label RMSE in specific groups, especially
-November, Manhattan-heavy routes, airport/EWR routes, and `Unknown` borough
-segments. This makes the next modeling work clear: focus on **bias correction**,
-**route-specific features**, and **tail-aware evaluation**.
+Route-calibrated **Model E** reduces practical prediction error substantially:
+MAE improves from **9.851** to **4.197**, and bias improves from **-9.373** to
+**-0.533**. The full raw RMSE remains high because **0.0162%** of test rows
+contain extreme anomaly-like fares, including a maximum `total_amount` of
+**335,550.94**. After isolating those rows, the operational filtered RMSE is
+**7.762**.
 
 ## 5. Key Findings
 
@@ -90,11 +95,12 @@ segments. This makes the next modeling work clear: focus on **bias correction**,
 - **Short trips are operationally attractive:** trips under five minutes have
   the highest estimated revenue per hour, while longer trips generate larger
   fares but lower hourly efficiency.
-- **Model A is the best current model:** closed-form ridge regression has the
-  best validation RMSE and stable robust test RMSE.
-- **Aggregate RMSE hides segment risk:** MAE is stable around **$9-10**, but
-  true-label RMSE spikes in a few route and month segments because of extreme
-  fare behavior.
+- **Model E is the strongest current model:** validation-fitted route
+  calibration removes most systematic underprediction while keeping the model
+  simple and explainable.
+- **Aggregate RMSE hides tail risk:** normal-trip error is much lower than raw
+  RMSE suggests; only **1,751** of **10.8M** test rows are flagged as
+  operational anomalies, but they dominate squared error.
 
 ## 6. Technical Skills Demonstrated
 
@@ -105,8 +111,8 @@ segments. This makes the next modeling work clear: focus on **bias correction**,
 - **Analytics engineering:** monthly KPI tables, route revenue ranking, tip
   analysis, duration-efficiency metrics, and borough-pair analysis.
 - **Machine learning:** time-based splits, train-only preprocessing, target
-  encoding, z-score standardization, baseline modeling, ridge regression, Huber
-  loss, robust labels, and segment diagnostics.
+  encoding, z-score standardization, baseline modeling, ridge regression,
+  validation residual calibration, robust labels, and tail diagnostics.
 - **Project communication:** professional README, technical docs, Databricks
   HTML output, and handover-style reporting.
 

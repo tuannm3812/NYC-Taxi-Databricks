@@ -45,7 +45,25 @@ training while removing obvious quality defects.
 - Robust label clipping is fitted from training data only and used as a
   diagnostic lens, not as the final true-label metric.
 
-## 5. Review Notes
+## 5. Tail-Anomaly Review
+
+The model-improvement notebook adds an operational tail review for the
+October-December 2024 test window. It keeps the full raw metric for
+transparency, but also flags anomaly-like rows that dominate squared error:
+
+| Rule | Count |
+| --- | ---: |
+| `fare_per_min > 50` | 1,032 |
+| high-fare Manhattan internal trip | 826 |
+| November 10-20 minute trip with absolute error >= 100 | 42 |
+| `total_amount > 1000` | 3 |
+
+Overall, 1,751 of 10,829,246 test rows are flagged, or 0.0162%. These rows
+explain why full raw RMSE is much higher than MAE and operational RMSE. The
+maximum observed `total_amount` is 335,550.94, which is not representative of
+normal taxi operations.
+
+## 6. Review Notes
 
 The quality rules are intentionally explicit in the notebook Markdown and SQL
 cells. This makes the cleaning assumptions auditable and keeps the curated table
